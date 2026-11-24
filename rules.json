@@ -1,0 +1,24 @@
+{
+  "thresholds": { "high": 40, "medium": 0 },
+  "high_keywords": [
+    "urgent", "asap", "action required", "action needed", "immediately", "deadline",
+    "due today", "overdue", "final notice", "payment failed", "payment declined",
+    "security alert", "suspicious", "unauthorized", "account suspended", "legal notice",
+    "court", "tax notice", "income tax", "gst notice", "contract", "offer letter", "interview"
+  ],
+  "medium_keywords": [
+    "invoice", "due", "bill", "statement", "payment", "receipt", "renewal", "expires",
+    "expiring", "reminder", "meeting", "invite", "invitation", "review", "approval",
+    "approve", "failed", "ci failed", "build failed", "order", "delivery", "shipped",
+    "refund", "kyc", "verify", "sign-in", "new login"
+  ],
+  "low_keywords": [
+    "newsletter", "digest", "weekly", "unsubscribe", "sale", "% off", "offer", "deal",
+    "webinar", "top stories", "recommended", "you appeared in", "promo", "discount",
+    "otp", "one-time password", "verification code"
+  ],
+  "vip_senders": [],
+  "vip_domains": [],
+  "mute_senders": [],
+  "mute_domains": []
+}

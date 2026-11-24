@@ -1,0 +1,52 @@
+name: daily-mail-digest
+
+on:
+  schedule:
+    # 02:30 UTC = 08:00 IST. GitHub may start scheduled runs a few minutes late.
+    - cron: "30 2 * * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "send = real digest, dry-run = print in log only, test = one test message"
+        type: choice
+        options: [send, dry-run, test]
+        default: dry-run
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mail-digest
+  cancel-in-progress: false
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run digest
+        env:
+          IMAP_ACCOUNTS: ${{ secrets.IMAP_ACCOUNTS }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          CALLMEBOT_PHONE: ${{ secrets.CALLMEBOT_PHONE }}
+          CALLMEBOT_APIKEY: ${{ secrets.CALLMEBOT_APIKEY }}
+          VIP_SENDERS: ${{ secrets.VIP_SENDERS }}
+          VIP_DOMAINS: ${{ secrets.VIP_DOMAINS }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          DELIVERY: ${{ vars.DELIVERY }}
+          LLM_MODE: ${{ vars.LLM_MODE }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
+          LOOKBACK_HOURS: ${{ vars.LOOKBACK_HOURS }}
+          MAX_MEDIUM: ${{ vars.MAX_MEDIUM }}
+        run: |
+          MODE="${{ github.event.inputs.mode || 'send' }}"
+          case "$MODE" in
+            test)    python digest.py --test-message ;;
+            dry-run) python digest.py --dry-run --reasons ;;
+            *)       python digest.py ;;
+          esac
